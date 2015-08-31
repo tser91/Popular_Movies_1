@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_splash">SplashActivity</string>
+
+    <!-- Strings for sort menu -->
+    <string name="title_activity_movie_details">MovieDetails</string>
+    <string name="movied_release_date">Release date:</string>
+    <string name="movied_title">Title</string>
+    <string name="movie_poster">Movie Poster</string>
+
+    <string name="comming_soon">Trailers comming soon!</string>
+
+</resources>

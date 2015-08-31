@@ -1,0 +1,144 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#272b54"
+    android:orientation="vertical"
+    tools:context="com.sergiosaborio.popularmovies.MovieDetails">
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_green_dark"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView_movied_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/abc_button_padding_horizontal_material"
+                android:text="@string/movied_title"
+                android:textColor="#272b54"
+                android:textSize="@dimen/abc_action_button_min_width_overflow_material"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imageView_movied"
+                        android:layout_width="match_parent"
+                        android:layout_height="285dp"
+                        android:layout_marginBottom="@dimen/abc_button_padding_horizontal_material"
+                        android:layout_marginTop="@dimen/abc_button_padding_horizontal_material"
+                        android:contentDescription="@string/movie_poster" />
+
+                    <TextView
+                        android:id="@+id/textView_moviedb_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="@dimen/abc_button_padding_horizontal_material"
+                        android:layout_marginTop="@dimen/abc_button_padding_horizontal_material"
+                        android:textColor="#272b54"
+                        android:textIsSelectable="true"
+                        android:textSize="@dimen/abc_text_size_subtitle_material_toolbar"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView_movied_releaseDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="@dimen/abc_button_padding_horizontal_material"
+                        android:layout_marginTop="@dimen/abc_button_padding_horizontal_material"
+                        android:textColor="#272b54"
+                        android:textIsSelectable="true"
+                        android:textSize="@dimen/abc_text_size_subtitle_material_toolbar"
+                        android:textStyle="bold" />
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/abc_text_size_caption_material" />
+
+                    <TextView
+                        android:id="@+id/textView_movied_plot"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/abc_button_padding_horizontal_material"
+                        android:layout_marginTop="@dimen/abc_button_padding_horizontal_material"
+                        android:maxHeight="@dimen/abc_action_bar_default_height_material"
+                        android:textColor="#e82e2e2e"
+                        android:textIsSelectable="true"
+                        android:textSize="@dimen/abc_text_size_subtitle_material_toolbar" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/abc_action_bar_icon_vertical_padding_material"
+        android:layout_marginBottom="@dimen/abc_action_bar_icon_vertical_padding_material"
+        android:layout_marginLeft="@dimen/abc_action_bar_icon_vertical_padding_material"
+        android:layout_marginRight="@dimen/abc_action_bar_icon_vertical_padding_material"
+        android:layout_marginTop="@dimen/abc_action_bar_icon_vertical_padding_material">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/abc_action_bar_overflow_padding_end_material"
+                android:layout_marginLeft="@dimen/abc_dialog_padding_material"
+                android:layout_marginRight="@dimen/abc_dialog_padding_material"
+                android:layout_marginTop="@dimen/abc_action_bar_overflow_padding_end_material"
+                android:layout_weight="0.8"
+                android:background="@android:drawable/ic_dialog_info" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="@string/comming_soon"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>

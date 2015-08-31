@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sort_criteria_array">
+        <item>Sort by:</item>
+        <item>Release date</item>
+        <item>Revenue</item>
+        <item>Highest Rated</item>
+        <item>Most Popular</item>
+        <item>Name</item>
+    </string-array>
+</resources>

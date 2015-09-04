@@ -20,7 +20,7 @@ public class MovieDetails extends AppCompatActivity implements constants {
 
         
         // Get the movie information from main activity
-        Movie movie = (Movie) getIntent().getSerializableExtra("movie");
+        Movie movie = getIntent().getParcelableExtra("movie");
 
         Log.d("Movie title", movie.getTitle());
         updateUI(movie);
@@ -46,7 +46,7 @@ public class MovieDetails extends AppCompatActivity implements constants {
         //Update movie title
         textview = (TextView) findViewById(R.id.textView_movied_title);
         if (movie.getTitle().equals("null")) {
-            textview.setText(TITLE_NOT_AVAILIBLE);
+            textview.setText(TITLE_NOT_AVAILABLE);
         } else {
             textview.setText(movie.getTitle());
         }
@@ -54,7 +54,7 @@ public class MovieDetails extends AppCompatActivity implements constants {
         //Update movie release date
         textview = (TextView) findViewById(R.id.textView_movied_releaseDate);
         if (movie.getRelease_date().equals("null")) {
-            textview.setText(RELEASE_DATE_NOT_AVAILIBLE);
+            textview.setText(RELEASE_DATE_NOT_AVAILABLE);
         } else {
             textview.setText(movie.getRelease_date());
         }
@@ -62,7 +62,7 @@ public class MovieDetails extends AppCompatActivity implements constants {
         //Update movie plot
         textview = (TextView) findViewById(R.id.textView_movied_plot);
         if (movie.getPlot_synopsis().equals("null")) {
-            textview.setText(DESCRIPTION_NOT_AVAILIBLE);
+            textview.setText(DESCRIPTION_NOT_AVAILABLE);
         } else {
             textview.setText(movie.getPlot_synopsis());
         }
@@ -70,7 +70,7 @@ public class MovieDetails extends AppCompatActivity implements constants {
         //Update movie rating
         textview = (TextView) findViewById(R.id.textView_moviedb_rating);
         if ((movie.getVote_average() + "").equals("null")) {
-            textview.setText(RATING_NOT_AVAILIBLE);
+            textview.setText(RATING_NOT_AVAILABLE);
         } else {
             textview.setText(movie.getVote_average() + TOTAL_RATING);
         }

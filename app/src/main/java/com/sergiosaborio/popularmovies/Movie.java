@@ -1,12 +1,24 @@
 package com.sergiosaborio.popularmovies;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by SergioSaborio on 8/24/15.
  */
-public class Movie implements Serializable {
+public class Movie implements Parcelable {
 
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
     /* Class attributes */
     private String title;
     private String release_date;
@@ -24,6 +36,7 @@ public class Movie implements Serializable {
         this.plot_synopsis = plot_synopsis;
     }
 
+
     public Movie() {
         this.title = "";
         this.release_date = "";
@@ -32,6 +45,13 @@ public class Movie implements Serializable {
         this.plot_synopsis = "";
     }
 
+    protected Movie(Parcel in) {
+        title = in.readString();
+        release_date = in.readString();
+        movie_poster_url = in.readString();
+        vote_average = in.readDouble();
+        plot_synopsis = in.readString();
+    }
 
     /* Getters and Setters */
     public String getTitle() {
@@ -72,5 +92,19 @@ public class Movie implements Serializable {
 
     public void setPlot_synopsis(String plot_synopsis) {
         this.plot_synopsis = plot_synopsis;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(title);
+        dest.writeString(release_date);
+        dest.writeString(movie_poster_url);
+        dest.writeDouble(vote_average);
+        dest.writeString(plot_synopsis);
     }
 }

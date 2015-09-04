@@ -61,8 +61,6 @@ public class MovieThumbAdapter extends BaseAdapter implements constants {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-        System.out.println("PASA POR ACA Y SIZE ES " + this.movieList.size());
-        System.out.println("POSITION IS " + position);
         printMovieList();
 
         Holder holder;

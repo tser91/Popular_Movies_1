@@ -3,6 +3,7 @@ package com.sergiosaborio.popularmovies;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -25,6 +26,7 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Reference:
@@ -32,8 +34,8 @@ import java.util.ArrayList;
  * TMDBSearchResultActivity.java
  */
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, constants {
-
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
+        constants {
 
     // UI Elements
     GridView gridView;
@@ -43,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     MovieCollection movieCollection;
     String sortingCriteria;
     ArrayAdapter<CharSequence> sort_criteria_spinner_adapter;
+
+    boolean changed_orientation= false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,12 +80,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onLoadMore(int page, int totalItemsCount) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to your AdapterView
-                loadDataFromApi(page);
+                /*if (changed_orientation){
+                    changed_orientation = false;
+                }
+                else {*/
+                    loadDataFromApi(page);
+                //}
             }
         });
 
-        // Perform the first movie search to display initial options to the user
-        loadDataFromApi(FIRST_PAGE);
+        if (savedInstanceState != null){
+            changed_orientation = true;
+            if (savedInstanceState.get(MOVIE_LIST_KEY) != null){
+                List<Movie> savedMovieList = (List<Movie>) savedInstanceState.get(MOVIE_LIST_KEY);
+                sortingCriteria = savedInstanceState.getString(SORTING_CRITERIA_KEY);
+                for (int i = 0; i < savedMovieList.size(); i++){
+                    movieCollection.addMovie(savedMovieList.get(i));
+                }
+                updateUI();
+            }
+        }
+        else {
+            // Perform the first movie search to display initial options to the user
+            loadDataFromApi(FIRST_PAGE);
+        }
     }
 
     private void loadDataFromApi(int page) {
@@ -90,6 +112,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 SORT_PARAMETER + sortingCriteria;
         Log.d("URL query", query);
         new TMDBConnection().execute(query);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList(MOVIE_LIST_KEY,
+                (ArrayList<? extends Parcelable>) movieCollection.getMovieCollection());
+        outState.putString(SORTING_CRITERIA_KEY, sortingCriteria);
     }
 
     @Override
@@ -111,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Log.d("DEBUG", "POSITION IS " + position);
+        String previousSortingCriteria = sortingCriteria;
         switch (position) {
             case 1:
                 sortingCriteria = MENU_RELEASE_DATE;
@@ -132,7 +162,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 sortingCriteria = "";
                 break;
         }
-        resetGridAdapter();
+        // If the sorting criteria didn't change, there's nothing to be made
+        if (!previousSortingCriteria.equals(sortingCriteria)){
+            resetGridAdapter();
+        }
+
     }
 
     @Override
@@ -146,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         protected void onPreExecute() {
-            this.dialog.setMessage("Loading Movies");
+            this.dialog.setMessage(LOADING_MOVIES);
             this.dialog.show();
         }
 

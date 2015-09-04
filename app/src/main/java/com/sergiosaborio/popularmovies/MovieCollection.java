@@ -10,19 +10,19 @@ public class MovieCollection {
 
     private List<Movie> movieCollection;
 
+    public MovieCollection() {
+        this.movieCollection = new ArrayList<>();
+    }
+
+    public MovieCollection(List<Movie> movieCollection) {
+        this.movieCollection = movieCollection;
+    }
+
     public List<Movie> getMovieCollection() {
         return movieCollection;
     }
 
     public void setMovieCollection(List<Movie> movieCollection) {
-        this.movieCollection = movieCollection;
-    }
-
-    public MovieCollection() {
-        this.movieCollection = new ArrayList<Movie>();
-    }
-
-    public MovieCollection(List<Movie> movieCollection) {
         this.movieCollection = movieCollection;
     }
 
@@ -65,4 +65,5 @@ public class MovieCollection {
     public void clearMovieCollection(){
         movieCollection.clear();
     }
+
 }

@@ -31,10 +31,13 @@ public interface constants {
     String SORT_PARAMETER = "&sort_by=";
     String IMAGE_NOT_AVAILABLE_URL = "http://www.mobiletoones.com/downloads/wallpapers/" +
             "funny_wallpapers/preview/23/33618-sorry-this-wallpaer-not-available.jpg";
-    String TITLE_NOT_AVAILIBLE = "Movie's title not available";
-    String DESCRIPTION_NOT_AVAILIBLE = "Sorry, this movie's description is'nt available";
-    String RELEASE_DATE_NOT_AVAILIBLE = "Release date not available";
-    String RATING_NOT_AVAILIBLE = "Rating not available";
+    String TITLE_NOT_AVAILABLE = "Movie's title not available";
+    String DESCRIPTION_NOT_AVAILABLE = "Sorry, this movie's description is'nt available";
+    String RELEASE_DATE_NOT_AVAILABLE = "Release date not available";
+    String RATING_NOT_AVAILABLE = "Rating not available";
+    String LOADING_MOVIES = "Loading movies";
+    String SORTING_CRITERIA_KEY = "SORTING_CRITERIA_KEY";
+    String MOVIE_LIST_KEY = "MOVIE_LIST_KEY";
     int FIRST_PAGE = 1;
     double HEIGHT_PROPORTION = 0.675;
 }

@@ -17,15 +17,19 @@ package com.sergiosaborio.popularmovies;
 public interface constants {
 
     String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
-    String MOVIEDB_KEY = ""; // <----------------------------------- PUT HERE YOUR MOVIEDB_KEY
-    String MENU_MOST_POPULAR = "popularity.desc";
-    String MENU_HIGHEST_RATED = "vote_average.desc";
-    String MENU_NAME = "original_title.desc";
-    String MENU_RELEASE_DATE = "primary_release_date.desc";
-    String MENU_REVENUE = "revenue.desc";
+    String MOVIEDB_KEY = "d948bda43bbf90a604eb8aa4b4f8ca30"; // <----------------------------------- PUT HERE YOUR MOVIEDB_KEY
+    String SORT_CRITERIA_MOST_POPULAR = "popularity.desc";
+    String SORT_CRITERIA_HIGHEST_RATED = "vote_average.desc";
+    String SORT_CRITERIA_NAME = "original_title.desc";
+    String SORT_CRITERIA_RELEASE_DATE = "primary_release_date.desc";
+    String SORT_CRITERIA_REVENUE = "revenue.desc";
     String TOTAL_RATING = "/10";
     String BASE_MOVIEDB_QUERY_URL = "http://api.themoviedb.org/3/";
+    String BASE_YOUTUBE_URL = "https://www.youtube.com/watch?v=";
     String DISCOVER_MOVIE = "discover/movie";
+    String MOVIE_QUERY = "movie/";
+    String REVIEWS_QUERY = "/reviews";
+    String VIDEOS_QUERY = "/videos";
     String KEY_PARAMETER = "?api_key=";
     String PAGE_PARAMETER = "&page=";
     String SORT_PARAMETER = "&sort_by=";

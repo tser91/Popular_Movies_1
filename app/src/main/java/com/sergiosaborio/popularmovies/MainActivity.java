@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -107,11 +106,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void loadDataFromApi(int page) {
-        String query = BASE_MOVIEDB_QUERY_URL;
-        query += DISCOVER_MOVIE + KEY_PARAMETER + MOVIEDB_KEY + PAGE_PARAMETER + page +
-                SORT_PARAMETER + sortingCriteria;
-        Log.d("URL query", query);
-        new TMDBConnection().execute(query);
+        QueryBuilder queryBuilder = new QueryBuilder();
+        new TMDBConnection().execute(queryBuilder.getDiscoverQuery(page,sortingCriteria));
     }
 
     @Override
@@ -144,20 +140,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         String previousSortingCriteria = sortingCriteria;
         switch (position) {
             case 1:
-                sortingCriteria = MENU_RELEASE_DATE;
+                sortingCriteria = SORT_CRITERIA_RELEASE_DATE;
                 break;
             case 2:
-                sortingCriteria = MENU_REVENUE;
+                sortingCriteria = SORT_CRITERIA_REVENUE;
                 break;
             case 3:
-                sortingCriteria = MENU_HIGHEST_RATED;
+                sortingCriteria = SORT_CRITERIA_HIGHEST_RATED;
                 break;
             case 4:
-                sortingCriteria = MENU_MOST_POPULAR;
+                sortingCriteria = SORT_CRITERIA_MOST_POPULAR;
                 break;
             case 5:
-                sortingCriteria = MENU_NAME;
+                sortingCriteria = SORT_CRITERIA_NAME;
                 break;
+            case 6: /* Favorites */
+                loadFavoriteData();
+                return;
             default:
                 sortingCriteria = "";
                 break;
@@ -167,6 +166,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             resetGridAdapter();
         }
 
+    }
+
+    private void loadFavoriteData() {
+        movieCollection.clearMovieCollection();
     }
 
     @Override
@@ -237,8 +240,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     movie.setMovie_poster_url(jsonMovieObject.getString("poster_path"));
                     movie.setPlot_synopsis(jsonMovieObject.getString("overview"));
                     movie.setRelease_date(jsonMovieObject.getString("release_date"));
-                    movie.setVote_average(Double.parseDouble(
-                            jsonMovieObject.getString("vote_average")));
+                    movie.setVote_average(jsonMovieObject.getDouble("vote_average"));
+                    movie.setId(jsonMovieObject.getInt("id"));
                     movieCollection.addMovie(movie);
                 }
             } catch (JSONException e) {

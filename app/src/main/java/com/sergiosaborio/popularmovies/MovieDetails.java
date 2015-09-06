@@ -1,15 +1,20 @@
 package com.sergiosaborio.popularmovies;
 
+import android.app.ActivityGroup;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -27,7 +32,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MovieDetails extends FragmentActivity implements constants {
+public class MovieDetails extends ActivityGroup implements constants {
 
     private Movie movie;
 
@@ -37,17 +42,15 @@ public class MovieDetails extends FragmentActivity implements constants {
         setContentView(R.layout.activity_movie_details);
 
         // create the TabHost that will contain the Tabs
-        FragmentTabHost tabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
-        tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-        /** Add the tabs  to the TabHost to display. */
+        TabHost tabHost = (TabHost)findViewById(R.id.tabhost);
+        tabHost.setup(this.getLocalActivityManager());
         tabHost.addTab(tabHost.newTabSpec("First Tab")
                 .setIndicator("Trailers")
-                , TrailersFragment.class, null);
+                .setContent(R.id.Trailers));
 
         tabHost.addTab(tabHost.newTabSpec("Second Tab")
                 .setIndicator("Reviews")
-                , ReviewsFragment.class, null);
-
+                .setContent(R.id.Reviews));
 
 
         // Get the movie information from main activity
@@ -155,12 +158,33 @@ public class MovieDetails extends FragmentActivity implements constants {
             TrailerAdapter trailerAdapter= new TrailerAdapter(this, trailersArray);
 
             // Attach the adapter to a ListView
-            ListView listView = (ListView) findViewById(R.id.listView_trailers);
+            final ListView listView = (ListView) findViewById(R.id.listView_trailers);
             listView.setAdapter(trailerAdapter);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                    trailerClicked(((Trailer) listView.getItemAtPosition(position)).getKey());
+                }
+            });
 
         } catch (JSONException e) {
             System.err.println(e);
         }
+    }
+
+    private void trailerClicked(String id){
+        System.out.println("ENTRA A DESPLEGAR EL VIDEO DE YOUTUBE!");
+        try{
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(BASE_YOUTUBE_APP_URL + id));
+            startActivity(intent);
+        }catch (ActivityNotFoundException ex){
+            Intent intent=new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(BASE_YOUTUBE_URL+id));
+            startActivity(intent);
+        }
+        Log.i("Video", "Video Playing....");
     }
 
     private void getMovieReviews(String jsonInfo){
@@ -175,6 +199,9 @@ public class MovieDetails extends FragmentActivity implements constants {
 
             // Attach the adapter to a ListView
             ListView listView = (ListView) findViewById(R.id.listView_reviews);
+            if (listView.equals(null)){
+                System.out.println("Listview es null");
+            }
             listView.setAdapter(reviewAdapter);
 
         } catch (JSONException e) {

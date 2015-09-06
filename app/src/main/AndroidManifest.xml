@@ -25,10 +25,6 @@
         <activity
             android:name=".MovieDetails"
             android:label="@string/title_activity_movie_details" />
-        <activity
-            android:name=".TrailersActivity"
-            android:label="@string/title_activity_trailers" >
-        </activity>
     </application>
 
 </manifest>

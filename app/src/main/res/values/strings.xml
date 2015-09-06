@@ -13,5 +13,6 @@
 
     <string name="trailer">Trailer</string>
     <string name="title_activity_trailers">TrailersActivity</string>
+    <string name="title_activity_reviews">ReviewsActivity</string>
 
 </resources>

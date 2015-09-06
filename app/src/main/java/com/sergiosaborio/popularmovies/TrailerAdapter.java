@@ -41,6 +41,7 @@ public class TrailerAdapter extends ArrayAdapter<Trailer> implements constants{
 
                 @Override
                 public void onClick(View v) {
+                    System.out.println("RECIBE CLICK 1");
                     trailerClicked(getItem(position).getKey());
                 }
             });
@@ -50,6 +51,14 @@ public class TrailerAdapter extends ArrayAdapter<Trailer> implements constants{
         }
         else {
             viewHolder = (ViewHolder) convertView.getTag();
+            convertView.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    System.out.println("RECIBE CLICK 2");
+                    trailerClicked(getItem(position).getKey());
+                }
+            });
         }
         // Populate the data into the template view using the data object
         viewHolder.trailerName.setText(trailer.getName());
@@ -60,6 +69,7 @@ public class TrailerAdapter extends ArrayAdapter<Trailer> implements constants{
     }
 
     private void trailerClicked(String id){
+        System.out.println("ENTRA A DESPLEGAR EL VIDEO DE YOUTUBE!");
         try{
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(BASE_YOUTUBE_APP_URL + id));
             context.startActivity(intent);

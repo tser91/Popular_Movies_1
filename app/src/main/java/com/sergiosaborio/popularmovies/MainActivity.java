@@ -79,12 +79,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onLoadMore(int page, int totalItemsCount) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to your AdapterView
-                /*if (changed_orientation){
-                    changed_orientation = false;
-                }
-                else {*/
                 loadDataFromApi(page);
-                //}
             }
         });
 

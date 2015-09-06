@@ -11,6 +11,7 @@
     <string name="movied_title">Title</string>
     <string name="movie_poster">Movie Poster</string>
 
-    <string name="comming_soon">Trailers comming soon!</string>
+    <string name="trailer">Trailer</string>
+    <string name="title_activity_trailers">TrailersActivity</string>
 
 </resources>

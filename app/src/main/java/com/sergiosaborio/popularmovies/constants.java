@@ -17,7 +17,7 @@ package com.sergiosaborio.popularmovies;
 public interface constants {
 
     String BASE_IMAGE_URL = "http://image.tmdb.org/t/p/w185/";
-    String MOVIEDB_KEY = "d948bda43bbf90a604eb8aa4b4f8ca30"; // <----------------------------------- PUT HERE YOUR MOVIEDB_KEY
+    String MOVIEDB_KEY = ""; // <----------------------------------- PUT HERE YOUR MOVIEDB_KEY
     String SORT_CRITERIA_MOST_POPULAR = "popularity.desc";
     String SORT_CRITERIA_HIGHEST_RATED = "vote_average.desc";
     String SORT_CRITERIA_NAME = "original_title.desc";
@@ -26,6 +26,7 @@ public interface constants {
     String TOTAL_RATING = "/10";
     String BASE_MOVIEDB_QUERY_URL = "http://api.themoviedb.org/3/";
     String BASE_YOUTUBE_URL = "https://www.youtube.com/watch?v=";
+    String BASE_YOUTUBE_APP_URL = "vnd.youtube:";
     String DISCOVER_MOVIE = "discover/movie";
     String MOVIE_QUERY = "movie/";
     String REVIEWS_QUERY = "/reviews";

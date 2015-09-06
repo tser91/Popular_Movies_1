@@ -61,7 +61,7 @@ public class MovieThumbAdapter extends BaseAdapter implements constants {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
-        printMovieList();
+        //printMovieList();
 
         Holder holder;
 

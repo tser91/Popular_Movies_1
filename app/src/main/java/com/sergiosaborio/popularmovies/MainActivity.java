@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     changed_orientation = false;
                 }
                 else {*/
-                    loadDataFromApi(page);
+                loadDataFromApi(page);
                 //}
             }
         });

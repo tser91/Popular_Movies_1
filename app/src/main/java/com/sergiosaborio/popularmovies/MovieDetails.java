@@ -3,11 +3,13 @@ package com.sergiosaborio.popularmovies;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -25,7 +27,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MovieDetails extends AppCompatActivity implements constants {
+public class MovieDetails extends FragmentActivity implements constants {
 
     private Movie movie;
 
@@ -34,7 +36,20 @@ public class MovieDetails extends AppCompatActivity implements constants {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
-        
+        // create the TabHost that will contain the Tabs
+        FragmentTabHost tabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
+        tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+        /** Add the tabs  to the TabHost to display. */
+        tabHost.addTab(tabHost.newTabSpec("First Tab")
+                .setIndicator("Trailers")
+                , TrailersFragment.class, null);
+
+        tabHost.addTab(tabHost.newTabSpec("Second Tab")
+                .setIndicator("Reviews")
+                , ReviewsFragment.class, null);
+
+
+
         // Get the movie information from main activity
         movie = getIntent().getParcelableExtra("movie");
 
@@ -130,34 +145,38 @@ public class MovieDetails extends AppCompatActivity implements constants {
     }
 
     private void getMovieTrailers(String jsonInfo){
-        ArrayList<String> trailersArray = new ArrayList<>();
+        ArrayList<Trailer> trailersArray;
         try {
             JSONObject jsonObject = new JSONObject(jsonInfo);
             JSONArray array = (JSONArray) jsonObject.get("results");
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject jsonMovieObject = array.getJSONObject(i);
-                trailersArray.add(jsonMovieObject.getString("key"));
-                System.out.println("Video "+ i+ ": key -> " + trailersArray.get(i));
-            }
+            trailersArray = Trailer.fromJson(array);
+
+            // Create the adapter to convert the array to views
+            TrailerAdapter trailerAdapter= new TrailerAdapter(this, trailersArray);
+
+            // Attach the adapter to a ListView
+            ListView listView = (ListView) findViewById(R.id.listView_trailers);
+            listView.setAdapter(trailerAdapter);
+
         } catch (JSONException e) {
             System.err.println(e);
         }
     }
 
     private void getMovieReviews(String jsonInfo){
-        ArrayList<Review> reviewsArray = new ArrayList<>();
+        ArrayList<Review> reviewsArray;
         try {
             JSONObject jsonObject = new JSONObject(jsonInfo);
             JSONArray array = (JSONArray) jsonObject.get("results");
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject jsonMovieObject = array.getJSONObject(i);
-                reviewsArray.add(new Review(jsonMovieObject.getString("id"),
-                        jsonMovieObject.getString("author"),
-                        jsonMovieObject.getString("content")));
-                System.out.println("Review "+ i+ ": author -> " + reviewsArray.get(i).getAuthor());
-                System.out.println("Review "+ i+ ": content -> " + reviewsArray.get(i).getContent());
-                System.out.println("Review "+ i+ ": id -> " + reviewsArray.get(i).getId());
-            }
+            reviewsArray = Review.fromJson(array);
+
+            // Create the adapter to convert the array to views
+            ReviewAdapter reviewAdapter= new ReviewAdapter(this, reviewsArray);
+
+            // Attach the adapter to a ListView
+            ListView listView = (ListView) findViewById(R.id.listView_reviews);
+            listView.setAdapter(reviewAdapter);
+
         } catch (JSONException e) {
             System.err.println(e);
         }

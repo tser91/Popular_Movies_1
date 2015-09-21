@@ -44,9 +44,6 @@ public class Trailer {
         for (int i = 0; i < jsonObjects.length(); i++) {
             try {
                 trailers.add(new Trailer(jsonObjects.getJSONObject(i)));
-                System.out.println("Trailer "+ i+ ": name -> " + trailers.get(i).getName());
-                System.out.println("Trailer "+ i+ ": key -> " + trailers.get(i).getKey());
-                System.out.println("Trailer " + i + ": id -> " + trailers.get(i).getId());
             } catch (JSONException e) {
                 e.printStackTrace();
             }

@@ -1,20 +1,18 @@
 package com.sergiosaborio.popularmovies;
 
-import android.app.ActivityGroup;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -32,26 +30,29 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MovieDetails extends ActivityGroup implements constants {
+public class MovieDetails extends AppCompatActivity implements constants {
 
     private Movie movie;
+    private ListView listViewTrailers;
+    private ListView listViewReviews;
+    private ArrayList<Trailer> trailersArray;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
-        // create the TabHost that will contain the Tabs
-        TabHost tabHost = (TabHost)findViewById(R.id.tabhost);
-        tabHost.setup(this.getLocalActivityManager());
-        tabHost.addTab(tabHost.newTabSpec("First Tab")
-                .setIndicator("Trailers")
-                .setContent(R.id.Trailers));
+        trailersArray = new ArrayList<>();
 
-        tabHost.addTab(tabHost.newTabSpec("Second Tab")
-                .setIndicator("Reviews")
-                .setContent(R.id.Reviews));
+        // Create the adapter to convert the array to views
+        // Attach the adapter to a ListView
+        listViewTrailers = (ListView) findViewById(R.id.listView_movie_trailers);
+        listViewTrailers.setAdapter(new TrailerAdapter(getApplicationContext(),
+                R.layout.trailer_cell, trailersArray));
 
+        listViewTrailers.setClickable(true);
+        listViewTrailers.setItemsCanFocus(false);
 
         // Get the movie information from main activity
         movie = getIntent().getParcelableExtra("movie");
@@ -60,7 +61,7 @@ public class MovieDetails extends ActivityGroup implements constants {
         updateUI(movie);
 
         if (savedInstanceState != null){
-
+            updateAdapters();
         }
         else {
             // Perform the first movie search to display initial options to the user
@@ -148,26 +149,14 @@ public class MovieDetails extends ActivityGroup implements constants {
     }
 
     private void getMovieTrailers(String jsonInfo){
-        ArrayList<Trailer> trailersArray;
         try {
             JSONObject jsonObject = new JSONObject(jsonInfo);
             JSONArray array = (JSONArray) jsonObject.get("results");
-            trailersArray = Trailer.fromJson(array);
-
-            // Create the adapter to convert the array to views
-            TrailerAdapter trailerAdapter= new TrailerAdapter(this, trailersArray);
-
-            // Attach the adapter to a ListView
-            final ListView listView = (ListView) findViewById(R.id.listView_trailers);
-            listView.setAdapter(trailerAdapter);
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                    trailerClicked(((Trailer) listView.getItemAtPosition(position)).getKey());
-                }
-            });
+            ArrayList<Trailer> trailers = Trailer.fromJson(array);
+            for (int i = 0; i < trailers.size(); i++)
+            {
+                trailersArray.add(trailers.get(i));
+            }
 
         } catch (JSONException e) {
             System.err.println(e);
@@ -198,15 +187,17 @@ public class MovieDetails extends ActivityGroup implements constants {
             ReviewAdapter reviewAdapter= new ReviewAdapter(this, reviewsArray);
 
             // Attach the adapter to a ListView
-            ListView listView = (ListView) findViewById(R.id.listView_reviews);
-            if (listView.equals(null)){
-                System.out.println("Listview es null");
-            }
-            listView.setAdapter(reviewAdapter);
+            ListView listView = (ListView) findViewById(R.id.listView_movie_reviews);
+            //listView.setAdapter(reviewAdapter);
 
         } catch (JSONException e) {
             System.err.println(e);
         }
+    }
+
+    private void updateAdapters() {
+        ((BaseAdapter) listViewTrailers.getAdapter()).notifyDataSetChanged();
+        //((BaseAdapter) listViewReviews.getAdapter()).notifyDataSetChanged();
     }
 
     private class TMDBConnection extends AsyncTask {
@@ -232,6 +223,7 @@ public class MovieDetails extends ActivityGroup implements constants {
 
         @Override
         protected void onPostExecute(Object result) {
+            updateAdapters();
         }
 
         public String getMovieInfo(String query) throws IOException {

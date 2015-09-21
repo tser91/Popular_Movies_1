@@ -2,14 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#272b54"
     android:orientation="vertical"
     tools:context="com.sergiosaborio.popularmovies.MovieDetails">
 
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_green_dark"
+        android:background="#1d9b9d"
         android:padding="@dimen/activity_horizontal_margin">
 
         <LinearLayout
@@ -17,15 +16,36 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView_movied_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/abc_button_padding_horizontal_material"
-                android:text="@string/movied_title"
-                android:textColor="#272b54"
-                android:textSize="@dimen/abc_action_button_min_width_overflow_material"
-                android:textStyle="bold" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView_movied_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/abc_button_padding_horizontal_material"
+                    android:layout_weight="0.6"
+                    android:maxHeight="30dp"
+                    android:maxLines="1"
+                    android:text="@string/movied_title"
+                    android:textColor="#272b54"
+                    android:textSize="30dp"
+                    android:textStyle="bold" />
+
+                <ImageButton android:id="@+id/favorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="@dimen/abc_button_padding_horizontal_material"
+                    android:layout_weight="0.35"
+                    android:background="#00ffffff"
+                    android:onClick="onToggleStar"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:src="@android:drawable/btn_star" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -35,7 +55,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -62,7 +82,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -85,11 +105,12 @@
                     <TextView
                         android:id="@+id/textView_movied_plot"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="@dimen/abc_button_padding_horizontal_material"
                         android:layout_marginTop="@dimen/abc_button_padding_horizontal_material"
                         android:maxHeight="@dimen/abc_action_bar_default_height_material"
+                        android:maxLines="12"
                         android:textColor="#e82e2e2e"
                         android:textIsSelectable="true"
                         android:textSize="@dimen/abc_text_size_subtitle_material_toolbar" />
@@ -101,55 +122,19 @@
 
     </FrameLayout>
 
-    <TabHost
-        android:id="@+id/tabhost"
-        android:layout_width="match_parent"
+    <ListView
+        android:id="@+id/listView_movie_trailers"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:choiceMode="singleChoice"
+        android:clickable="false"
+        android:focusable="false"
+        android:minHeight="8dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"></TabWidget>
-
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:id="@+id/Trailers"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <ListView
-                        android:id="@+id/listView_trailers"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/Reviews"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <ListView
-                        android:id="@+id/listView_reviews"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true" />
-                </LinearLayout>
-
-            </FrameLayout>
-        </LinearLayout>
-    </TabHost>
+    <ListView
+        android:id="@+id/listView_movie_reviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:choiceMode="singleChoice" />
 
 </LinearLayout>

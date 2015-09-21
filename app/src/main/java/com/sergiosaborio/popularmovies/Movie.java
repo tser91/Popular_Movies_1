@@ -3,6 +3,8 @@ package com.sergiosaborio.popularmovies;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import hugo.weaving.DebugLog;
+
 /**
  * Created by SergioSaborio on 8/24/15.
  */
@@ -58,6 +60,7 @@ public class Movie implements Parcelable {
     }
 
     /* Getters and Setters */
+    @DebugLog
     public int getId() {
         return id;
     }
@@ -66,6 +69,7 @@ public class Movie implements Parcelable {
         this.id = id;
     }
 
+    @DebugLog
     public String getTitle() {
         return title;
     }
@@ -74,6 +78,7 @@ public class Movie implements Parcelable {
         this.title = title;
     }
 
+    @DebugLog
     public String getRelease_date() {
         return release_date;
     }
@@ -82,6 +87,7 @@ public class Movie implements Parcelable {
         this.release_date = release_date;
     }
 
+    @DebugLog
     public String getMovie_poster_url() {
         return movie_poster_url;
     }
@@ -90,6 +96,7 @@ public class Movie implements Parcelable {
         this.movie_poster_url = movie_poster_url;
     }
 
+    @DebugLog
     public double getVote_average() {
         return vote_average;
     }
@@ -98,6 +105,7 @@ public class Movie implements Parcelable {
         this.vote_average = vote_average;
     }
 
+    @DebugLog
     public String getPlot_synopsis() {
         return plot_synopsis;
     }

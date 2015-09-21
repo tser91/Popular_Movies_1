@@ -34,14 +34,13 @@
                     android:textSize="30dp"
                     android:textStyle="bold" />
 
-                <ImageButton android:id="@+id/favorite"
+                <ImageButton android:id="@+id/button_favorite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="@dimen/abc_button_padding_horizontal_material"
                     android:layout_weight="0.35"
                     android:background="#00ffffff"
-                    android:onClick="onToggleStar"
                     android:paddingLeft="6dp"
                     android:paddingRight="6dp"
                     android:src="@android:drawable/btn_star" />

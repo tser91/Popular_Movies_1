@@ -10,7 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -37,7 +39,6 @@ public class MovieDetails extends AppCompatActivity implements constants {
     private ListView listViewReviews;
     private ArrayList<Trailer> trailersArray;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +55,21 @@ public class MovieDetails extends AppCompatActivity implements constants {
         listViewTrailers.setClickable(true);
         listViewTrailers.setItemsCanFocus(false);
 
+        final ImageButton button = (ImageButton) findViewById(R.id.button_favorite);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                if (button.isSelected())
+                {
+                    button.setImageResource(android.R.drawable.btn_star_big_off);
+                }
+                else {
+                    button.setImageResource(android.R.drawable.btn_star_big_on);
+                }
+                button.setSelected(!button.isSelected());
+            }
+        });
+
         // Get the movie information from main activity
         movie = getIntent().getParcelableExtra("movie");
 
@@ -67,6 +83,10 @@ public class MovieDetails extends AppCompatActivity implements constants {
             // Perform the first movie search to display initial options to the user
             loadDataFromApi(FIRST_PAGE);
         }
+    }
+
+    private void onToggleStar(){
+        System.out.println("PRUEBA DE LA ESTRELLA");
     }
 
     private void updateUI(Movie movie) {

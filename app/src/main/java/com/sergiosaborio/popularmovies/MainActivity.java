@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -150,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 sortingCriteria = SORT_CRITERIA_NAME;
                 break;
             case 6: /* Favorites */
+                sortingCriteria = SORT_CRITERIA_FAVORITES;
                 loadFavoriteData();
                 return;
             default:
@@ -187,6 +189,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             try {
                 getMoviesInfo((String) params[0]);
             } catch (IOException e) {
+                Log.e(APP_TAG, "STACKTRACE");
+                Log.e(APP_TAG, Log.getStackTraceString(e));
             }
             return null;
         }
@@ -240,7 +244,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     movieCollection.addMovie(movie);
                 }
             } catch (JSONException e) {
-                System.err.println(e);
+                Log.e(APP_TAG, "STACKTRACE");
+                Log.e(APP_TAG, Log.getStackTraceString(e));
             }
         }
 

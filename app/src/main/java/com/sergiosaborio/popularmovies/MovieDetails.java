@@ -3,6 +3,7 @@ package com.sergiosaborio.popularmovies;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sergiosaborio.popularmovies.provider.movie.MovieContentValues;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -24,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -64,6 +67,12 @@ public class MovieDetails extends AppCompatActivity implements constants {
                     button.setImageResource(android.R.drawable.btn_star_big_off);
                 }
                 else {
+                    MovieContentValues movieValues = new MovieContentValues();
+                    movieValues.putDescription(movie.getPlot_synopsis());
+                    movieValues.putRating(movie.getVote_average() + "");
+                    movieValues.putReleasedate(movie.getRelease_date());
+                    movieValues.putTitle(movie.getTitle());
+                    movieValues.putImage(getMovieImage());
                     button.setImageResource(android.R.drawable.btn_star_big_on);
                 }
                 button.setSelected(!button.isSelected());
@@ -85,8 +94,17 @@ public class MovieDetails extends AppCompatActivity implements constants {
         }
     }
 
-    private void onToggleStar(){
-        System.out.println("PRUEBA DE LA ESTRELLA");
+    private byte[] getMovieImage() {
+        // convert View into Bitmap
+        ImageView view = (ImageView)findViewById(R.id.imageView_movied);
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        Bitmap bm = view.getDrawingCache();
+
+        // convert Bitmap* into ByteArray
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
     }
 
     private void updateUI(Movie movie) {
@@ -179,7 +197,8 @@ public class MovieDetails extends AppCompatActivity implements constants {
             }
 
         } catch (JSONException e) {
-            System.err.println(e);
+            Log.e(APP_TAG, "STACKTRACE");
+            Log.e(APP_TAG, Log.getStackTraceString(e));
         }
     }
 
@@ -211,7 +230,8 @@ public class MovieDetails extends AppCompatActivity implements constants {
             //listView.setAdapter(reviewAdapter);
 
         } catch (JSONException e) {
-            System.err.println(e);
+            Log.e(APP_TAG, "STACKTRACE");
+            Log.e(APP_TAG, Log.getStackTraceString(e));
         }
     }
 
@@ -237,6 +257,8 @@ public class MovieDetails extends AppCompatActivity implements constants {
                     getMovieTrailers(result);
                 }
             } catch (IOException e) {
+                Log.e(APP_TAG, "STACKTRACE");
+                Log.e(APP_TAG, Log.getStackTraceString(e));
             }
             return null;
         }

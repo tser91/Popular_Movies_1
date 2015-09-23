@@ -23,6 +23,8 @@ public interface constants {
     String SORT_CRITERIA_NAME = "original_title.desc";
     String SORT_CRITERIA_RELEASE_DATE = "primary_release_date.desc";
     String SORT_CRITERIA_REVENUE = "revenue.desc";
+    String SORT_CRITERIA_FAVORITES = "";
+    
     String TOTAL_RATING = "/10";
     String BASE_MOVIEDB_QUERY_URL = "http://api.themoviedb.org/3/";
     String BASE_YOUTUBE_URL = "https://www.youtube.com/watch?v=";

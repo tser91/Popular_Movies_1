@@ -25,6 +25,10 @@
         <activity
             android:name=".MovieDetails"
             android:label="@string/title_activity_movie_details" />
+        <provider
+            android:name="com.sergiosaborio.popularmovies.provider.DBProvider"
+            android:authorities="com.sergiosaborio.popularmovies.provider"
+            android:exported="false" />
     </application>
 
 </manifest>

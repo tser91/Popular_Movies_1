@@ -22,12 +22,17 @@ public class Movie implements Parcelable {
         }
     };
     /* Class attributes */
-    private String title;
-    private String release_date;
-    private String movie_poster_url;
-    private double vote_average;
-    private String plot_synopsis;
     private int id;
+
+    private String title;
+
+    private String release_date;
+
+    private String movie_poster_url;
+
+    private double vote_average;
+
+    private String plot_synopsis;
 
     /* Object Constructors */
     public Movie(String title, String release_date, String movie_poster_url,

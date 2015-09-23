@@ -14,6 +14,10 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
 
+import com.sergiosaborio.popularmovies.provider.movie.MovieColumns;
+import com.sergiosaborio.popularmovies.provider.movie.MovieCursor;
+import com.sergiosaborio.popularmovies.provider.movie.MovieSelection;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -166,7 +170,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void loadFavoriteData() {
+
         movieCollection.clearMovieCollection();
+
+        MovieSelection movieSelection = new MovieSelection();
+        movieSelection.count(getContentResolver());
+        String[] projection = { MovieColumns.DEFAULT_ORDER};
+        MovieCursor movieCursor = movieSelection.query(getContentResolver(), projection);
+        movieCursor.moveToNext();
+        for (int index = 0; index < movieCursor.getCount(); index++)
+        {
+            Movie movie = new Movie(movieCursor.getTitle(),
+                                    movieCursor.getReleasedate(),
+                                    "",
+                                    Integer.parseInt(movieCursor.getRating()),
+                                    movieCursor.getDescription(),
+                    ((int) movieCursor.getId()));
+            movieCollection.addMovie(movie);
+            movieCursor.moveToNext();
+        }
+        updateUI();
     }
 
     @Override

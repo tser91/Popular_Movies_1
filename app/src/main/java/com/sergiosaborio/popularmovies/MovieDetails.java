@@ -1,8 +1,7 @@
 package com.sergiosaborio.popularmovies;
 
-import android.content.ActivityNotFoundException;
+import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -19,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sergiosaborio.popularmovies.provider.movie.MovieContentValues;
+import com.sergiosaborio.popularmovies.provider.trailer.TrailerContentValues;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -34,6 +34,8 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+
+import hugo.weaving.DebugLog;
 
 public class MovieDetails extends AppCompatActivity implements constants {
 
@@ -62,18 +64,13 @@ public class MovieDetails extends AppCompatActivity implements constants {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                if (button.isSelected())
-                {
+                if (button.isSelected()) {
                     button.setImageResource(android.R.drawable.btn_star_big_off);
-                }
-                else {
-                    MovieContentValues movieValues = new MovieContentValues();
-                    movieValues.putDescription(movie.getPlot_synopsis());
-                    movieValues.putRating(movie.getVote_average() + "");
-                    movieValues.putReleasedate(movie.getRelease_date());
-                    movieValues.putTitle(movie.getTitle());
-                    movieValues.putImage(getMovieImage());
+                } else {
                     button.setImageResource(android.R.drawable.btn_star_big_on);
+                    long movieID = insertMovie();
+                    insertTrailers(movieID);
+                    insertReviews(movieID);
                 }
                 button.setSelected(!button.isSelected());
             }
@@ -83,7 +80,7 @@ public class MovieDetails extends AppCompatActivity implements constants {
         movie = getIntent().getParcelableExtra("movie");
 
         Log.d("Movie title", movie.getTitle());
-        updateUI(movie);
+        updateUI();
 
         if (savedInstanceState != null){
             updateAdapters();
@@ -92,6 +89,48 @@ public class MovieDetails extends AppCompatActivity implements constants {
             // Perform the first movie search to display initial options to the user
             loadDataFromApi(FIRST_PAGE);
         }
+    }
+
+    /**
+     * Insert the trailers of the movie.
+     *
+     */
+    @DebugLog
+    private void insertTrailers(long movieID) {
+        for (int index = 0; index < trailersArray.size(); index++)
+        {
+            TrailerContentValues trailerValues = new TrailerContentValues();
+            trailerValues.putName(trailersArray.get(index).getName());
+            trailerValues.putUrl(trailersArray.get(index).getKey());
+            trailerValues.putMovieId(movieID);
+            Uri uri = trailerValues.insert(getContentResolver());
+            ContentUris.parseId(uri);
+        }
+    }
+
+    /**
+     * Insert a reviews of the movie.
+     *
+     */
+    @DebugLog
+    private void insertReviews(long movieID) {
+    }
+
+    /**
+     * Insert a movie.
+     *
+     * @return the id of the movie product.
+     */
+    @DebugLog
+    private long insertMovie() {
+        MovieContentValues movieValues = new MovieContentValues();
+        movieValues.putDescription(movie.getPlot_synopsis());
+        movieValues.putRating(movie.getVote_average() + "");
+        movieValues.putReleasedate(movie.getRelease_date());
+        movieValues.putTitle(movie.getTitle());
+        movieValues.putImage(getMovieImage());
+        Uri uri = movieValues.insert(getContentResolver());
+        return ContentUris.parseId(uri);
     }
 
     private byte[] getMovieImage() {
@@ -107,7 +146,7 @@ public class MovieDetails extends AppCompatActivity implements constants {
         return stream.toByteArray();
     }
 
-    private void updateUI(Movie movie) {
+    private void updateUI() {
         TextView textview;
 
         // Update movie poster
@@ -200,19 +239,6 @@ public class MovieDetails extends AppCompatActivity implements constants {
             Log.e(APP_TAG, "STACKTRACE");
             Log.e(APP_TAG, Log.getStackTraceString(e));
         }
-    }
-
-    private void trailerClicked(String id){
-        System.out.println("ENTRA A DESPLEGAR EL VIDEO DE YOUTUBE!");
-        try{
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(BASE_YOUTUBE_APP_URL + id));
-            startActivity(intent);
-        }catch (ActivityNotFoundException ex){
-            Intent intent=new Intent(Intent.ACTION_VIEW,
-                    Uri.parse(BASE_YOUTUBE_URL+id));
-            startActivity(intent);
-        }
-        Log.i("Video", "Video Playing....");
     }
 
     private void getMovieReviews(String jsonInfo){

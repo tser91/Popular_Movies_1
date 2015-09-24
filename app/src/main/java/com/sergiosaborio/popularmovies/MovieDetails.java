@@ -3,6 +3,7 @@ package com.sergiosaborio.popularmovies;
 import android.content.ContentUris;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,7 +18,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sergiosaborio.popularmovies.provider.movie.MovieColumns;
 import com.sergiosaborio.popularmovies.provider.movie.MovieContentValues;
+import com.sergiosaborio.popularmovies.provider.movie.MovieCursor;
+import com.sergiosaborio.popularmovies.provider.movie.MovieSelection;
 import com.sergiosaborio.popularmovies.provider.trailer.TrailerContentValues;
 import com.squareup.picasso.Picasso;
 
@@ -157,7 +161,21 @@ public class MovieDetails extends AppCompatActivity implements constants {
         if (movie.getMovie_poster_url().equals("null")) {
             Picasso.with(context).load(IMAGE_NOT_AVAILABLE_URL).fit().into(
                     (ImageView) findViewById(R.id.imageView_movied));
-        } else {
+        }
+        else if (movie.getMovie_poster_url().equals(SORT_CRITERIA_FAVORITES))
+        {
+            MovieSelection movieSelection = new MovieSelection();
+            movieSelection.id(movie.getId());
+            String[] projection = { MovieColumns.IMAGE};
+            MovieCursor movieCursor = movieSelection.query(getContentResolver(), projection);
+            movieCursor.moveToNext();
+
+            byte[] bytes = movieCursor.getImage();
+            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            ((ImageView) findViewById(R.id.imageView_movied)).setImageBitmap(bmp);
+            movieCursor.close();
+        }
+        else {
             Picasso.with(context).load(BASE_IMAGE_URL +
                     movie.getMovie_poster_url()).fit().into(
                     (ImageView) findViewById(R.id.imageView_movied));

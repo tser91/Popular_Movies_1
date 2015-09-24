@@ -33,18 +33,19 @@ public class Movie implements Parcelable {
     private double vote_average;
 
     private String plot_synopsis;
+    private byte[] poster;
 
     /* Object Constructors */
     public Movie(String title, String release_date, String movie_poster_url,
-                 int vote_average, String plot_synopsis, int id) {
+                 double vote_average, String plot_synopsis, int id) {
         this.title = title;
         this.release_date = release_date;
         this.movie_poster_url = movie_poster_url;
         this.vote_average = vote_average;
         this.plot_synopsis = plot_synopsis;
         this.id = id;
+        this.poster = null;
     }
-
 
     public Movie() {
         this.title = "";
@@ -53,6 +54,7 @@ public class Movie implements Parcelable {
         this.vote_average = 0;
         this.plot_synopsis = "";
         this.id = 0;
+        this.poster = null;
     }
 
     protected Movie(Parcel in) {
@@ -62,6 +64,14 @@ public class Movie implements Parcelable {
         vote_average = in.readDouble();
         plot_synopsis = in.readString();
         id = in.readInt();
+    }
+
+    public byte[] getPoster() {
+        return poster;
+    }
+
+    public void setPoster(byte[] poster) {
+        this.poster = poster;
     }
 
     /* Getters and Setters */

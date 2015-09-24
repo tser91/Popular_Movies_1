@@ -170,31 +170,60 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void loadFavoriteData() {
+        new FavoritesCharge().execute();
 
-        movieCollection.clearMovieCollection();
-
-        MovieSelection movieSelection = new MovieSelection();
-        movieSelection.count(getContentResolver());
-        String[] projection = { MovieColumns.DEFAULT_ORDER};
-        MovieCursor movieCursor = movieSelection.query(getContentResolver(), projection);
-        movieCursor.moveToNext();
-        for (int index = 0; index < movieCursor.getCount(); index++)
-        {
-            Movie movie = new Movie(movieCursor.getTitle(),
-                                    movieCursor.getReleasedate(),
-                                    "",
-                                    Integer.parseInt(movieCursor.getRating()),
-                                    movieCursor.getDescription(),
-                    ((int) movieCursor.getId()));
-            movieCollection.addMovie(movie);
-            movieCursor.moveToNext();
-        }
-        updateUI();
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private class FavoritesCharge extends AsyncTask {
+
+        ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+
+        @Override
+        protected void onPreExecute() {
+            this.dialog.setMessage(LOADING_MOVIES);
+            this.dialog.show();
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+            movieCollection.clearMovieCollection();
+
+            MovieSelection movieSelection = new MovieSelection();
+            movieSelection.count(getContentResolver());
+            String[] projection = { MovieColumns.TITLE, MovieColumns.RELEASEDATE, MovieColumns.IMAGE,
+                    MovieColumns.RATING, MovieColumns.DESCRIPTION, MovieColumns._ID};
+            MovieCursor movieCursor = movieSelection.query(getContentResolver(), projection);
+            movieCursor.moveToNext();
+            for (int index = 0; index < movieCursor.getCount(); index++)
+            {
+                Movie movie = null;
+                movie = new Movie(movieCursor.getTitle(),
+                        movieCursor.getReleasedate(),
+                        SORT_CRITERIA_FAVORITES,
+                        Double.parseDouble(movieCursor.getRating()),
+                        movieCursor.getDescription(),
+                        ((int) movieCursor.getId())
+                );
+                movie.setPoster(movieCursor.getImage());
+                movieCollection.addMovie(movie);
+                movieCursor.moveToNext();
+            }
+            movieCursor.close();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object result) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            updateUI();
+        }
     }
 
     private class TMDBConnection extends AsyncTask {

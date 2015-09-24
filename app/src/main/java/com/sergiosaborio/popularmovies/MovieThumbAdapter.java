@@ -2,6 +2,8 @@ package com.sergiosaborio.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,12 +117,16 @@ public class MovieThumbAdapter extends BaseAdapter implements constants {
 
 
         //Fill our view components with data
-
         // Check if there is no poster available for the image
         if (movie.getMovie_poster_url().equals("null")) {
             Picasso.with(context).load(IMAGE_NOT_AVAILABLE_URL).fit().into(holder.imageView);
         }
-        OJO sergio, haga un encapsulado para favoritos, y hace un else if para revisar el encapsulado y pone la imagen en el imageview
+        else if (movie.getMovie_poster_url().equals(SORT_CRITERIA_FAVORITES))
+        {
+            byte[] bytes = movie.getPoster();
+            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            holder.imageView.setImageBitmap(bmp);
+        }
         else {
             Picasso.with(context).load(BASE_IMAGE_URL +
                     movie.getMovie_poster_url()).fit().into(holder.imageView);

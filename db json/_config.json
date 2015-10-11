@@ -1,0 +1,13 @@
+{
+  "syntaxVersion": 3,
+  "projectPackageId": "com.sergiosaborio.popularmovies",
+  "authority": "com.sergiosaborio.popularmovies.provider",
+  "providerJavaPackage": "com.sergiosaborio.popularmovies.provider",
+  "providerClassName": "DBProvider",
+  "sqliteOpenHelperClassName": "DBSQLiteOpenHelper",
+  "sqliteOpenHelperCallbacksClassName": "DBSQLiteOpenHelperCallbacks",
+  "databaseFileName": "movie.db",
+  "databaseVersion": 1,
+  "enableForeignKeys": true,
+  "useAnnotations": true
+}

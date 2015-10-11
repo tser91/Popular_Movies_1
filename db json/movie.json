@@ -1,0 +1,29 @@
+{
+  "fields": [
+    {
+      "name": "title",
+      "type": "String",
+      "defaultValue": "Movie name not available"
+    },
+    {
+      "name": "description",
+      "type": "String",
+      "nullable": true,
+      "defaultValue": "Movie plot not available"
+    },
+    {
+      "name": "releaseDate",
+      "type": "String",
+      "defaultValue": "Movie release date not available"
+    },
+    {
+      "name": "rating",
+      "type": "String",
+      "defaultValue": "Movie release date not available"
+    },
+    {
+      "name": "image",
+      "type": "byte[]"
+    }
+  ]
+}

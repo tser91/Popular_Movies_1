@@ -1,0 +1,23 @@
+{
+  "fields": [
+    {
+      "name": "name",
+      "type": "String",
+      "nullable": true,
+      "defaultValue": “Trailer”
+    },
+    {
+      "name": "url",
+      "type": "String",
+    },
+    {
+      "name": "movie_id",
+      "type": "Long",
+      "nullable": false,
+      "foreignKey": {
+        "table": "movie",
+        "onDelete": "CASCADE"
+      }
+    }
+  ]
+}

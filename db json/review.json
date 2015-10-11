@@ -1,0 +1,23 @@
+{
+  "fields": [
+    {
+      "name": "name",
+      "type": "String",
+      "nullable": true,
+      "defaultValue": "Reviewer not available"
+    },
+    {
+      "name": "review",
+      "type": "String",
+    },
+    {
+      "name": "movie_id",
+      "type": "Long",
+      "nullable": false,
+      "foreignKey": {
+        "table": "movie",
+        "onDelete": "CASCADE"
+      }
+    }
+  ]
+}

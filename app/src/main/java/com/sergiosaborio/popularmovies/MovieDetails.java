@@ -2,6 +2,7 @@ package com.sergiosaborio.popularmovies;
 
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -122,7 +123,6 @@ public class MovieDetails extends AppCompatActivity implements constants {
         movieCursor.moveToNext();
 
         TrailerSelection trailerSelection = new TrailerSelection();
-        System.out.println("ID DE LA Q SE VA A BORRAR ES " + movieCursor.getId());
         trailerSelection.movieId(movieCursor.getId());
         trailerSelection.delete(getContentResolver());
     }
@@ -280,8 +280,25 @@ public class MovieDetails extends AppCompatActivity implements constants {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.share) {
+            shareTrailer();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void shareTrailer() {
+        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        share.setType("text/plain");
+
+        // Add data to the intent, the receiving app will decide
+        // what to do with it.
+        share.putExtra(Intent.EXTRA_SUBJECT, "Share " + movie.getTitle() + " trailer" );
+        share.putExtra(Intent.EXTRA_TEXT, BASE_YOUTUBE_URL + trailersArray.get(0).getKey());
+
+        startActivity(Intent.createChooser(share, "Share link!"));
+
     }
 
     private void loadDataFromApi(int page) {

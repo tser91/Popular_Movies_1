@@ -22,7 +22,10 @@ import com.sergiosaborio.popularmovies.provider.movie.MovieColumns;
 import com.sergiosaborio.popularmovies.provider.movie.MovieContentValues;
 import com.sergiosaborio.popularmovies.provider.movie.MovieCursor;
 import com.sergiosaborio.popularmovies.provider.movie.MovieSelection;
+import com.sergiosaborio.popularmovies.provider.trailer.TrailerColumns;
 import com.sergiosaborio.popularmovies.provider.trailer.TrailerContentValues;
+import com.sergiosaborio.popularmovies.provider.trailer.TrailerCursor;
+import com.sergiosaborio.popularmovies.provider.trailer.TrailerSelection;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -47,6 +50,7 @@ public class MovieDetails extends AppCompatActivity implements constants {
     private ListView listViewTrailers;
     private ListView listViewReviews;
     private ArrayList<Trailer> trailersArray;
+    private boolean isMovieFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,8 @@ public class MovieDetails extends AppCompatActivity implements constants {
         setContentView(R.layout.activity_movie_details);
 
         trailersArray = new ArrayList<>();
+
+        isMovieFavorite = false;
 
         // Create the adapter to convert the array to views
         // Attach the adapter to a ListView
@@ -70,6 +76,9 @@ public class MovieDetails extends AppCompatActivity implements constants {
                 // Perform action on click
                 if (button.isSelected()) {
                     button.setImageResource(android.R.drawable.btn_star_big_off);
+                    removeTrailers();
+                    removeReviews();
+                    removeMovie();
                 } else {
                     button.setImageResource(android.R.drawable.btn_star_big_on);
                     long movieID = insertMovie();
@@ -82,17 +91,56 @@ public class MovieDetails extends AppCompatActivity implements constants {
 
         // Get the movie information from main activity
         movie = getIntent().getParcelableExtra("movie");
+        isMovieFavorite = isMovieFavorite();
 
-        Log.d("Movie title", movie.getTitle());
         updateUI();
 
         if (savedInstanceState != null){
             updateAdapters();
         }
         else {
-            // Perform the first movie search to display initial options to the user
-            loadDataFromApi(FIRST_PAGE);
+            // Check if movie is favorite, then load adapters from DB
+            if (isMovieFavorite) {
+                new TrailersCharge().execute();
+                button.setImageResource(android.R.drawable.btn_star_big_on);
+                button.setSelected(true);
+            }
+            else {
+                loadDataFromApi(FIRST_PAGE);
+            }
         }
+    }
+
+    private void removeReviews() {
+    }
+
+    private void removeTrailers() {
+        MovieSelection movieSelection = new MovieSelection();
+        movieSelection.title(movie.getTitle());
+        String[] projection = { MovieColumns._ID};
+        MovieCursor movieCursor = movieSelection.query(getContentResolver(), projection);
+        movieCursor.moveToNext();
+
+        TrailerSelection trailerSelection = new TrailerSelection();
+        System.out.println("ID DE LA Q SE VA A BORRAR ES " + movieCursor.getId());
+        trailerSelection.movieId(movieCursor.getId());
+        trailerSelection.delete(getContentResolver());
+    }
+
+    private void removeMovie() {
+        MovieSelection movieSelection = new MovieSelection();
+        movieSelection.title(movie.getTitle());
+        movieSelection.delete(getContentResolver());
+    }
+
+    @DebugLog
+    private boolean isMovieFavorite() {
+        MovieSelection movieSelection = new MovieSelection();
+        movieSelection.title(movie.getTitle());
+        String[] projection = { MovieColumns._ID};
+        MovieCursor movieCursor = movieSelection.query(getContentResolver(), projection);
+        movieCursor.moveToNext();
+        return movieCursor.getCount() > 0;
     }
 
     /**
@@ -129,7 +177,7 @@ public class MovieDetails extends AppCompatActivity implements constants {
     private long insertMovie() {
         MovieContentValues movieValues = new MovieContentValues();
         movieValues.putDescription(movie.getPlot_synopsis());
-        movieValues.putRating(movie.getVote_average() + "");
+        movieValues.putRating(String.valueOf(movie.getVote_average()));
         movieValues.putReleasedate(movie.getRelease_date());
         movieValues.putTitle(movie.getTitle());
         movieValues.putImage(getMovieImage());
@@ -162,10 +210,10 @@ public class MovieDetails extends AppCompatActivity implements constants {
             Picasso.with(context).load(IMAGE_NOT_AVAILABLE_URL).fit().into(
                     (ImageView) findViewById(R.id.imageView_movied));
         }
-        else if (movie.getMovie_poster_url().equals(SORT_CRITERIA_FAVORITES))
+        else if (isMovieFavorite)
         {
             MovieSelection movieSelection = new MovieSelection();
-            movieSelection.id(movie.getId());
+            movieSelection.title(movie.getTitle());
             String[] projection = { MovieColumns.IMAGE};
             MovieCursor movieCursor = movieSelection.query(getContentResolver(), projection);
             movieCursor.moveToNext();
@@ -340,6 +388,49 @@ public class MovieDetails extends AppCompatActivity implements constants {
             reader = new InputStreamReader(stream, "UTF-8");
             BufferedReader bufferedReader = new BufferedReader(reader);
             return bufferedReader.readLine();
+        }
+    }
+
+    private class TrailersCharge extends AsyncTask {
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+            trailersArray.clear();
+
+            // Get movie ID from DB
+            MovieSelection movieSelection = new MovieSelection();
+            movieSelection.title(movie.getTitle());
+            String[] movieProjection = { MovieColumns._ID};
+            MovieCursor movieCursor = movieSelection.query(getContentResolver(), movieProjection);
+            movieCursor.moveToNext();
+
+            // Get the trailers of the movie
+            TrailerSelection trailerSelection = new TrailerSelection();
+            trailerSelection.movieId(movieCursor.getId());
+
+            String[] trailerProjection = {TrailerColumns._ID, TrailerColumns.NAME,
+                    TrailerColumns.URL, TrailerColumns.MOVIE_ID};
+            TrailerCursor trailerCursor = trailerSelection.query(getContentResolver(), trailerProjection);
+            trailerCursor.moveToNext();
+
+            for (int index = 0; index < trailerCursor.getCount(); index++)
+            {
+                Trailer trailer = new Trailer(trailerCursor.getUrl(), trailerCursor.getName(),
+                        String.valueOf(trailerCursor.getMovieId()));
+                trailersArray.add(trailer);
+                trailerCursor.moveToNext();
+            }
+            trailerCursor.close();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Object result) {
+            updateAdapters();
         }
     }
 }

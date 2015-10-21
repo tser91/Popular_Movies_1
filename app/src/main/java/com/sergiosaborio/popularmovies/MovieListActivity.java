@@ -49,7 +49,6 @@ public class MovieListActivity extends FragmentActivity
                     .setActivateOnItemClick(true);
         }
 
-        // TODO: If exposing deep links into your app, handle intents here.
     }
 
     /**
@@ -57,13 +56,15 @@ public class MovieListActivity extends FragmentActivity
      * indicating that the item with the given ID was selected.
      */
     @Override
-    public void onItemSelected(String id) {
+    public void onItemSelected(Movie id) {
+        System.out.println("PASA AL ITEM SELECETED PADRE");
         if (mTwoPane) {
+            System.out.println("ENTRA EN TWO PANE");
             // In two-pane mode, show the detail view in this activity by
             // adding or replacing the detail fragment using a
             // fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(MovieDetailFragment.ARG_ITEM_ID, id);
+            arguments.putParcelable(MovieDetailFragment.ARG_ITEM_ID, id);
             MovieDetailFragment fragment = new MovieDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

@@ -59,7 +59,8 @@ public class MovieListFragment extends Fragment implements constants,
      */
     private static Callbacks movieCallbacks = new Callbacks() {
         @Override
-        public void onItemSelected(String id) {
+        public void onItemSelected(Movie id) {
+
         }
     };
     // UI Elements
@@ -122,17 +123,18 @@ public class MovieListFragment extends Fragment implements constants,
             }
         });
 
-        /*gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-            long arg3) {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
 
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            mCallbacks.onItemSelected(String.valueOf(
-                MovieCollection.movieCollection.get(position).getId()));
-        }});*/
+                //TODO remove this print
+                System.out.println("AGARRA EL CLICK EN POSITION "+ position);
+                // Notify the active callbacks interface (the activity, if the
+                // fragment is attached to one) that an item has been selected.
+                mCallbacks.onItemSelected(MovieCollection.movieCollection.get(position));
+            }
+        });
 
         // <<============================ GridView initialization ================================>>
 
@@ -325,7 +327,7 @@ public class MovieListFragment extends Fragment implements constants,
         /**
          * Callback for when an item has been selected.
          */
-        void onItemSelected(String id);
+        void onItemSelected(Movie id);
     }
 
     /**

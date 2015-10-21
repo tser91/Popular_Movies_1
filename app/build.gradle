@@ -63,7 +63,7 @@ dependencies {
 
 repositories {
     mavenCentral()
-    maven {url "https://clojars.org/repo/"}
+    maven { url "https://clojars.org/repo/" }
     jcenter()
 }
 
@@ -96,4 +96,7 @@ dependencies {
     compile 'com.github.frankiesardo:auto-parcel:0.3'
     apt 'com.github.frankiesardo:auto-parcel-processor:0.3'
     compile 'com.squareup:javapoet:1.2.0'
+}
+dependencies {
+    compile 'com.android.support:support-v4:23.+'
 }

@@ -25,10 +25,24 @@
         <activity
             android:name=".MovieDetails"
             android:label="@string/title_activity_movie_details" />
+
         <provider
-            android:name="com.sergiosaborio.popularmovies.provider.DBProvider"
+            android:name=".provider.DBProvider"
             android:authorities="com.sergiosaborio.popularmovies.provider"
             android:exported="false" />
+
+        <activity
+            android:name=".MovieListActivity"
+            android:label="@string/title_movie_list" >
+        </activity>
+        <activity
+            android:name=".MovieDetailActivity"
+            android:label="@string/title_movie_detail"
+            android:parentActivityName=".MovieListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sergiosaborio.popularmovies.MovieListActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -8,14 +8,14 @@ import java.util.List;
  */
 public class MovieCollection {
 
-    private List<Movie> movieCollection;
+    public static List<Movie> movieCollection;
 
     public MovieCollection() {
-        this.movieCollection = new ArrayList<>();
+        movieCollection = new ArrayList<>();
     }
 
     public MovieCollection(List<Movie> movieCollection) {
-        this.movieCollection = movieCollection;
+        MovieCollection.movieCollection = movieCollection;
     }
 
     public List<Movie> getMovieCollection() {
@@ -23,7 +23,7 @@ public class MovieCollection {
     }
 
     public void setMovieCollection(List<Movie> movieCollection) {
-        this.movieCollection = movieCollection;
+        MovieCollection.movieCollection = movieCollection;
     }
 
     public Movie getMovie(String title) {

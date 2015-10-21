@@ -14,5 +14,7 @@
     <string name="trailer">Trailer</string>
     <string name="title_activity_trailers">TrailersActivity</string>
     <string name="title_activity_reviews">ReviewsActivity</string>
+    <string name="title_movie_list">Movies</string>
+    <string name="title_movie_detail">Movie Detail</string>
 
 </resources>

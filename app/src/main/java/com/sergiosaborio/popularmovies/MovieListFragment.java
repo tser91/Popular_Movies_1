@@ -60,7 +60,6 @@ public class MovieListFragment extends Fragment implements constants,
     private static Callbacks movieCallbacks = new Callbacks() {
         @Override
         public void onItemSelected(Movie id) {
-
         }
     };
     // UI Elements
@@ -132,6 +131,7 @@ public class MovieListFragment extends Fragment implements constants,
                 System.out.println("AGARRA EL CLICK EN POSITION "+ position);
                 // Notify the active callbacks interface (the activity, if the
                 // fragment is attached to one) that an item has been selected.
+                System.out.println("MOVIE SENT es  "+ MovieCollection.movieCollection.get(position).getTitle());
                 mCallbacks.onItemSelected(MovieCollection.movieCollection.get(position));
             }
         });
@@ -185,10 +185,11 @@ public class MovieListFragment extends Fragment implements constants,
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        Activity a;
+        Activity activity;
 
         if (context instanceof Activity){
-            a=(Activity) context;
+            activity=(Activity) context;
+            mCallbacks = (Callbacks) activity;
         }
 
     }

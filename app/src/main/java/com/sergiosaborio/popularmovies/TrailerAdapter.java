@@ -22,7 +22,7 @@ public class TrailerAdapter extends BaseAdapter implements constants{
     Context context;
     List<Trailer> trailerList;
 
-    public TrailerAdapter(Context context, int resource, List<Trailer> objects) {
+    public TrailerAdapter(Context context, List<Trailer> objects) {
 
         this.context = context;
         this.trailerList = objects;

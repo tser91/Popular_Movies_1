@@ -21,8 +21,7 @@ import android.support.v4.app.FragmentActivity;
  * {@link MovieListFragment.Callbacks} interface
  * to listen for item selections.
  */
-public class MovieListActivity extends FragmentActivity
-        implements MovieListFragment.Callbacks {
+public class MovieListActivity extends FragmentActivity implements MovieListFragment.Callbacks {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -51,13 +50,10 @@ public class MovieListActivity extends FragmentActivity
 
     }
 
-    /**
-     * Callback method from {@link MovieListFragment.Callbacks}
-     * indicating that the item with the given ID was selected.
-     */
+
     @Override
     public void onItemSelected(Movie id) {
-        System.out.println("PASA AL ITEM SELECETED PADRE");
+        System.out.println("PASA AL ITEM SELECETED PADRE con " + id.getTitle());
         if (mTwoPane) {
             System.out.println("ENTRA EN TWO PANE");
             // In two-pane mode, show the detail view in this activity by

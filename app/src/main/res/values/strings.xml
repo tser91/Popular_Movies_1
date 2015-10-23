@@ -16,5 +16,7 @@
     <string name="title_activity_reviews">ReviewsActivity</string>
     <string name="title_movie_list">Movies</string>
     <string name="title_movie_detail">Movie Detail</string>
+    <string name="title_bla_list">Items</string>
+    <string name="title_bla_detail">bla Detail</string>
 
 </resources>

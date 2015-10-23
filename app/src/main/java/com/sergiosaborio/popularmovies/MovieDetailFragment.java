@@ -108,12 +108,15 @@ public class MovieDetailFragment extends Fragment implements constants {
 
         // Initializations
         trailersArray = new ArrayList<>();
-        isMovieFavorite = false;
+        reviewsArray = new ArrayList<>();
+
 
         // Get the arguments sent to this fragment
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            movie = MovieCollection.ITEM_MAP.get(getArguments().getParcelable(ARG_ITEM_ID));
+            movie = getArguments().getParcelable(ARG_ITEM_ID);
         }
+
+        isMovieFavorite = isMovieFavorite();
     }
 
     @Override
@@ -126,10 +129,17 @@ public class MovieDetailFragment extends Fragment implements constants {
             // Attach the adapter to a ListView
             listViewTrailers = (ListView) rootView.findViewById(R.id.listView_movie_trailers);
             listViewTrailers.setAdapter(new TrailerAdapter(getActivity().getApplicationContext(),
-                    R.layout.trailer_cell, trailersArray));
+                    trailersArray));
 
             listViewTrailers.setClickable(true);
             listViewTrailers.setItemsCanFocus(false);
+
+            listViewReviews = (ListView) rootView.findViewById(R.id.listView_movie_reviews);
+            listViewReviews.setAdapter(new ReviewAdapter(getActivity().getApplicationContext(),
+                    reviewsArray));
+
+            listViewReviews.setClickable(true);
+            listViewReviews.setItemsCanFocus(false);
 
             final ImageButton button = (ImageButton) rootView.findViewById(R.id.button_favorite);
             button.setOnClickListener(new View.OnClickListener() {
@@ -149,13 +159,6 @@ public class MovieDetailFragment extends Fragment implements constants {
                     button.setSelected(!button.isSelected());
                 }
             });
-
-            // Check if the movie is set as favorite
-            isMovieFavorite = isMovieFavorite();
-
-            // Update the UI with the movie's information
-            updateUI();
-
         }
 
         return rootView;
@@ -164,6 +167,9 @@ public class MovieDetailFragment extends Fragment implements constants {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Update the UI with the movie's information
+        updateUI();
 
         if (savedInstanceState != null){
             updateAdapters();
@@ -350,11 +356,7 @@ public class MovieDetailFragment extends Fragment implements constants {
         ImageView image = (ImageView) getActivity().findViewById(R.id.imageView_movied);
         image.setMaxHeight((int) (image.getWidth() / HEIGHT_PROPORTION));
         // Check if there is no poster available for the image
-        if (movie.getMovie_poster_url().equals("null")) {
-            Picasso.with(context).load(IMAGE_NOT_AVAILABLE_URL).fit().into(
-                    (ImageView) getActivity().findViewById(R.id.imageView_movied));
-        }
-        else if (isMovieFavorite)
+        if (isMovieFavorite)
         {
             MovieSelection movieSelection = new MovieSelection();
             movieSelection.title(movie.getTitle());
@@ -367,6 +369,10 @@ public class MovieDetailFragment extends Fragment implements constants {
             Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             ((ImageView) getActivity().findViewById(R.id.imageView_movied)).setImageBitmap(bmp);
             movieCursor.close();
+        }
+        else if (movie.getMovie_poster_url().equals("null")) {
+            Picasso.with(context).load(IMAGE_NOT_AVAILABLE_URL).fit().into(
+                    (ImageView) getActivity().findViewById(R.id.imageView_movied));
         }
         else {
             Picasso.with(context).load(BASE_IMAGE_URL +

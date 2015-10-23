@@ -51,18 +51,8 @@ public class MovieThumbAdapter extends BaseAdapter implements constants {
 
     }
 
-    private void printMovieList() {
-        for (int i = 0; i < this.movieList.size(); i++) {
-            System.out.println("Movie in position " + i +
-                    "is " + this.movieList.get(i).getTitle());
-        }
-    }
-
-
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-
-        //printMovieList();
 
         Holder holder;
 
@@ -79,18 +69,6 @@ public class MovieThumbAdapter extends BaseAdapter implements constants {
             //Inflate our xml cell to the convertView
             convertView = inflater.inflate(R.layout.movie_cell, null);
 
-            // TODO: 10/21/15 remove this
-            /*
-            // If a movie is clicked, the details will be shown
-            convertView.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    movieClicked(position);
-                }
-            });
-            */
-
             //Get xml components into our holder class
             holder.imageView = (ImageView)convertView.findViewById(R.id.movie_cell_imageview);
 
@@ -102,16 +80,6 @@ public class MovieThumbAdapter extends BaseAdapter implements constants {
             //The gridview cell is not empty and contains already components loaded,
             // get the tagged holder
             holder = (Holder)convertView.getTag();
-            // TODO: 10/21/15 remove this
-            /*
-            holder.imageView.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    movieClicked(position);
-                }
-            });
-            */
         }
 
         //Fill our cell with data
@@ -139,22 +107,11 @@ public class MovieThumbAdapter extends BaseAdapter implements constants {
         return convertView;
     }
 
-    // TODO: 10/21/15 remove this
-   /* private void movieClicked(int position) {
-        // New intent to go to movie details activity
-        Intent intent = new Intent(context, MovieDetails.class);
-        // The movie information will be sent to the new activity
-        intent.putExtra("movie", getItem(position));
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-    } */
-
     /**
      * This holder must replicate the components in the person_cell.xml
      * We have a textview for the name and the surname and an imageview for the picture
      */
     private class Holder{
         ImageView imageView;
-
     }
 }

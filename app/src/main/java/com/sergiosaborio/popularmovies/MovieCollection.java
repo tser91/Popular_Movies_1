@@ -1,9 +1,7 @@
 package com.sergiosaborio.popularmovies;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by SergioSaborio on 8/24/15.
@@ -11,11 +9,6 @@ import java.util.Map;
 public class MovieCollection {
 
     public static List<Movie> movieCollection;
-
-    /**
-     * A map of Movie items, by ID.
-     */
-    public static Map<String, Movie> ITEM_MAP = new HashMap<String, Movie>();
 
     public MovieCollection() {
         movieCollection = new ArrayList<>();

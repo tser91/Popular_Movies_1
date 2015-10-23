@@ -13,13 +13,13 @@
 
         <ImageView
             android:id="@+id/imageView_trailerIcon"
-            android:layout_width="86dp"
-            android:layout_height="86dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:background="@mipmap/ic_circle_play"
             android:contentDescription="@string/trailer"
             android:cropToPadding="false"

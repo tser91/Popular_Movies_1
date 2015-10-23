@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -124,42 +126,40 @@ public class MovieDetailFragment extends Fragment implements constants {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
-        if (movie != null) {
-            // Create the adapter to convert the array to views
-            // Attach the adapter to a ListView
-            listViewTrailers = (ListView) rootView.findViewById(R.id.listView_movie_trailers);
-            listViewTrailers.setAdapter(new TrailerAdapter(getActivity().getApplicationContext(),
-                    trailersArray));
+        // Create the adapter to convert the array to views
+        // Attach the adapter to a ListView
+        listViewTrailers = (ListView) rootView.findViewById(R.id.listView_movie_trailers);
+        listViewTrailers.setAdapter(new TrailerAdapter(getActivity().getApplicationContext(),
+                trailersArray));
 
-            listViewTrailers.setClickable(true);
-            listViewTrailers.setItemsCanFocus(false);
+        listViewTrailers.setClickable(true);
+        listViewTrailers.setItemsCanFocus(false);
 
-            listViewReviews = (ListView) rootView.findViewById(R.id.listView_movie_reviews);
-            listViewReviews.setAdapter(new ReviewAdapter(getActivity().getApplicationContext(),
-                    reviewsArray));
+        listViewReviews = (ListView) rootView.findViewById(R.id.listView_movie_reviews);
+        listViewReviews.setAdapter(new ReviewAdapter(getActivity().getApplicationContext(),
+                reviewsArray));
 
-            listViewReviews.setClickable(true);
-            listViewReviews.setItemsCanFocus(false);
+        listViewReviews.setClickable(true);
+        listViewReviews.setItemsCanFocus(false);
 
-            final ImageButton button = (ImageButton) rootView.findViewById(R.id.button_favorite);
-            button.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    // Perform action on click
-                    if (button.isSelected()) {
-                        button.setImageResource(android.R.drawable.btn_star_big_off);
-                        removeTrailers();
-                        removeReviews();
-                        removeMovie();
-                    } else {
-                        button.setImageResource(android.R.drawable.btn_star_big_on);
-                        long movieID = insertMovie();
-                        insertTrailers(movieID);
-                        insertReviews(movieID);
-                    }
-                    button.setSelected(!button.isSelected());
+        final ImageButton button = (ImageButton) rootView.findViewById(R.id.button_favorite);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Perform action on click
+                if (button.isSelected()) {
+                    button.setImageResource(android.R.drawable.btn_star_big_off);
+                    removeTrailers();
+                    removeReviews();
+                    removeMovie();
+                } else {
+                    button.setImageResource(android.R.drawable.btn_star_big_on);
+                    long movieID = insertMovie();
+                    insertTrailers(movieID);
+                    insertReviews(movieID);
                 }
-            });
-        }
+                button.setSelected(!button.isSelected());
+            }
+        });
 
         return rootView;
     }
@@ -168,10 +168,32 @@ public class MovieDetailFragment extends Fragment implements constants {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Update the UI with the movie's information
-        updateUI();
+        ArrayList<Review> tempReviewsArray;
+        ArrayList<Trailer> tempTrailersArray;
 
         if (savedInstanceState != null){
+            movie = (Movie) savedInstanceState.get(ARG_ITEM_ID);
+
+            if (null != savedInstanceState.get(REVIEWS_LIST)) {
+                tempReviewsArray = (ArrayList<Review>) savedInstanceState.get(REVIEWS_LIST);
+            }
+            else {
+                tempReviewsArray = new ArrayList<>();
+            }
+            if (null != savedInstanceState.get(TRAILERS_LIST)) {
+                tempTrailersArray = (ArrayList<Trailer>) savedInstanceState.get(TRAILERS_LIST);
+            }
+            else {
+                tempTrailersArray = new ArrayList<>();
+            }
+
+            for (int i = 0; i < tempReviewsArray.size(); i++){
+                reviewsArray.add(tempReviewsArray.get(i));
+            }
+            for (int i = 0; i < tempTrailersArray.size(); i++){
+                trailersArray.add(tempTrailersArray.get(i));
+            }
+
             updateAdapters();
         }
         else {
@@ -187,6 +209,18 @@ public class MovieDetailFragment extends Fragment implements constants {
                 loadDataFromApi(FIRST_PAGE);
             }
         }
+
+        // Update the UI with the movie's information
+        updateUI();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable(ARG_ITEM_ID, movie);
+        outState.putParcelableArrayList(REVIEWS_LIST, reviewsArray);
+        outState.putParcelableArrayList(TRAILERS_LIST, trailersArray);
     }
 
     @Override
@@ -202,13 +236,18 @@ public class MovieDetailFragment extends Fragment implements constants {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
     /**
      * Check if movie is marked as favorite
-     * @return
+     * @return result indicating if the movie is set as favorite
      */
     @DebugLog
     private boolean isMovieFavorite() {
-        boolean result = false;
+        boolean result;
         MovieSelection movieSelection = new MovieSelection();
         movieSelection.title(movie.getTitle());
         String[] projection = { MovieColumns._ID};
@@ -228,45 +267,51 @@ public class MovieDetailFragment extends Fragment implements constants {
      * Remove reviews of a movie from the DB
      */
     private void removeReviews() {
-        MovieSelection movieSelection = new MovieSelection();
-        movieSelection.title(movie.getTitle());
-        String[] projection = { MovieColumns._ID};
-        MovieCursor movieCursor = movieSelection.query(getActivity().getContentResolver(),
-                projection);
-        movieCursor.moveToNext();
+        if (null != movie) {
+            MovieSelection movieSelection = new MovieSelection();
+            movieSelection.title(movie.getTitle());
+            String[] projection = {MovieColumns._ID};
+            MovieCursor movieCursor = movieSelection.query(getActivity().getContentResolver(),
+                    projection);
+            movieCursor.moveToNext();
 
-        ReviewSelection reviewSelection = new ReviewSelection();
-        reviewSelection.movieId(movieCursor.getId());
-        reviewSelection.delete(getActivity().getContentResolver());
+            ReviewSelection reviewSelection = new ReviewSelection();
+            reviewSelection.movieId(movieCursor.getId());
+            reviewSelection.delete(getActivity().getContentResolver());
 
-        movieCursor.close();
+            movieCursor.close();
+        }
     }
 
     /**
      * Remove trailers of a movie from the DB
      */
     private void removeTrailers() {
-        MovieSelection movieSelection = new MovieSelection();
-        movieSelection.title(movie.getTitle());
-        String[] projection = { MovieColumns._ID};
-        MovieCursor movieCursor = movieSelection.query(getActivity().getContentResolver(),
-                projection);
-        movieCursor.moveToNext();
+        if (null != movie) {
+            MovieSelection movieSelection = new MovieSelection();
+            movieSelection.title(movie.getTitle());
+            String[] projection = {MovieColumns._ID};
+            MovieCursor movieCursor = movieSelection.query(getActivity().getContentResolver(),
+                    projection);
+            movieCursor.moveToNext();
 
-        TrailerSelection trailerSelection = new TrailerSelection();
-        trailerSelection.movieId(movieCursor.getId());
-        trailerSelection.delete(getActivity().getContentResolver());
+            TrailerSelection trailerSelection = new TrailerSelection();
+            trailerSelection.movieId(movieCursor.getId());
+            trailerSelection.delete(getActivity().getContentResolver());
 
-        movieCursor.close();
+            movieCursor.close();
+        }
     }
 
     /**
      * Remove a movie from the DB
      */
     private void removeMovie() {
-        MovieSelection movieSelection = new MovieSelection();
-        movieSelection.title(movie.getTitle());
-        movieSelection.delete(getActivity().getContentResolver());
+        if (null != movie) {
+            MovieSelection movieSelection = new MovieSelection();
+            movieSelection.title(movie.getTitle());
+            movieSelection.delete(getActivity().getContentResolver());
+        }
     }
 
     // <============================== Remove from DB ==============================
@@ -280,14 +325,15 @@ public class MovieDetailFragment extends Fragment implements constants {
      */
     @DebugLog
     private void insertTrailers(long movieID) {
-        for (int index = 0; index < trailersArray.size(); index++)
-        {
-            TrailerContentValues trailerValues = new TrailerContentValues();
-            trailerValues.putName(trailersArray.get(index).getName());
-            trailerValues.putUrl(trailersArray.get(index).getKey());
-            trailerValues.putMovieId(movieID);
-            Uri uri = trailerValues.insert(getActivity().getContentResolver());
-            ContentUris.parseId(uri);
+        if (trailersArray != null) {
+            for (int index = 0; index < trailersArray.size(); index++) {
+                TrailerContentValues trailerValues = new TrailerContentValues();
+                trailerValues.putName(trailersArray.get(index).getName());
+                trailerValues.putUrl(trailersArray.get(index).getKey());
+                trailerValues.putMovieId(movieID);
+                Uri uri = trailerValues.insert(getActivity().getContentResolver());
+                ContentUris.parseId(uri);
+            }
         }
     }
 
@@ -297,14 +343,15 @@ public class MovieDetailFragment extends Fragment implements constants {
      */
     @DebugLog
     private void insertReviews(long movieID) {
-        for (int index = 0; index < reviewsArray.size(); index++)
-        {
-            ReviewContentValues reviewValues = new ReviewContentValues();
-            reviewValues.putName(reviewsArray.get(index).getAuthor());
-            reviewValues.putReview(reviewsArray.get(index).getContent());
-            reviewValues.putMovieId(movieID);
-            Uri uri = reviewValues.insert(getActivity().getContentResolver());
-            ContentUris.parseId(uri);
+        if (reviewsArray != null) {
+            for (int index = 0; index < reviewsArray.size(); index++) {
+                ReviewContentValues reviewValues = new ReviewContentValues();
+                reviewValues.putName(reviewsArray.get(index).getAuthor());
+                reviewValues.putReview(reviewsArray.get(index).getContent());
+                reviewValues.putMovieId(movieID);
+                Uri uri = reviewValues.insert(getActivity().getContentResolver());
+                ContentUris.parseId(uri);
+            }
         }
     }
     
@@ -315,14 +362,17 @@ public class MovieDetailFragment extends Fragment implements constants {
      */
     @DebugLog
     private long insertMovie() {
-        MovieContentValues movieValues = new MovieContentValues();
-        movieValues.putDescription(movie.getPlot_synopsis());
-        movieValues.putRating(String.valueOf(movie.getVote_average()));
-        movieValues.putReleasedate(movie.getRelease_date());
-        movieValues.putTitle(movie.getTitle());
-        movieValues.putImage(getMovieImage());
-        Uri uri = movieValues.insert(getActivity().getContentResolver());
-        return ContentUris.parseId(uri);
+        if (movie != null) {
+            MovieContentValues movieValues = new MovieContentValues();
+            movieValues.putDescription(movie.getPlot_synopsis());
+            movieValues.putRating(String.valueOf(movie.getVote_average()));
+            movieValues.putReleasedate(movie.getRelease_date());
+            movieValues.putTitle(movie.getTitle());
+            movieValues.putImage(getMovieImage());
+            Uri uri = movieValues.insert(getActivity().getContentResolver());
+            return ContentUris.parseId(uri);
+        }
+        else return 0;
     }
 
     // <============================== Insert into DB ==============================
@@ -330,7 +380,7 @@ public class MovieDetailFragment extends Fragment implements constants {
 
     /**
      * Turns image form into a byte array to be displayed if no internet
-     * @return
+     * @return byte array of the movie thumbnail
      */
     private byte[] getMovieImage() {
         // convert View into Bitmap
@@ -432,7 +482,7 @@ public class MovieDetailFragment extends Fragment implements constants {
 
     /**
      * Starts the threads in charge of getting the trailers and reviews info of a movie
-     * @param page
+     * @param page indicating the page of the web server to be indexed
      */
     private void loadDataFromApi(int page) {
         new TMDBConnection().execute(new QueryBuilder().getMovieReviews(page, movie.getId()),
@@ -443,7 +493,7 @@ public class MovieDetailFragment extends Fragment implements constants {
 
     /**
      * Gets the trailers information of a movie, out of a JSON string
-     * @param jsonInfo
+     * @param jsonInfo has the information in JSON format of the movie trailers
      */
     private void getMovieTrailers(String jsonInfo){
         try {
@@ -463,7 +513,7 @@ public class MovieDetailFragment extends Fragment implements constants {
 
     /**
      * Gets the reviews of a movie out of a JSON string
-     * @param jsonInfo
+     * @param jsonInfo has the information in JSON format of the movie reviews
      */
     private void getMovieReviews(String jsonInfo){
 

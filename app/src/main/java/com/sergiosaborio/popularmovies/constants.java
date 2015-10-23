@@ -58,4 +58,8 @@ public interface constants {
 
     // Debug contants
     String APP_TAG = "POPULAR_MOVIES";
+
+    // Arguments
+    String REVIEWS_LIST = "reviews_list";
+    String TRAILERS_LIST = "trailers_list";
 }
